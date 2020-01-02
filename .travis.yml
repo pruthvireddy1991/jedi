@@ -44,7 +44,11 @@ script:
         if [ -z "$python_path" ]; then
           # Only required for JEDI_TEST_ENVIRONMENT=34.
           download_name=python-$test_env_version
-          wget https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/16.04/x86_64/$download_name.tar.bz2
+          if [[ "${TRAVIS_CPU_ARCH}" == "arm64" ]]; then
+            wget https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/16.04/aarch64/$download_name.tar.bz2;
+          else
+            wget https://s3.amazonaws.com/travis-python-archives/binaries/ubuntu/16.04/x86_64/$download_name.tar.bz2;
+          fi
           sudo tar xjf $download_name.tar.bz2 --directory / opt/python
           ln -s "/opt/python/${test_env_version}/bin/python" /home/travis/bin/$python_bin
         elif [ "${python_path#/opt/pyenv/shims}" != "$python_path" ]; then
